@@ -1,17 +1,26 @@
-from imhotep.tools import Tool
-from collections import defaultdict
 import re
 
-class Pep8Linter(Tool):
-    regex = re.compile(r'(?P<filename>.*):(?P<line_num>\d+):\d+: (?P<message>.*)')
-    def invoke(self, dirname, filenames=set(), **kwargs):
-        retval = defaultdict(lambda: defaultdict(list))
+from imhotep.tools import Tool
 
-        cmd = 'find %s -name "*.py" | xargs pep8' % dirname
-        output = self.executor(cmd)
-        for line in output.split("\n"):
+
+class Pep8Linter(Tool):
+
+    def __init__(self, *args, **kwargs):
+        super(Pep8Linter, self).__init__(*args, **kwargs)
+        self.linter = 'pep8'
+        self.config = 'tox.ini'
+        self.extension = 'py'
+        self.regex = re.compile(
+            r'(?P<filename>.*):(?P<line_num>\d+):\d+: (?P<message>.*)'
+        )
+
+    def format_linter_output(self, repo_dir, linter_output, linter_errors):
+        """ Returns a dict of linter errors """
+        for line in linter_output:
             match = self.regex.search(line)
             if match is not None:
-                filename = match.group('filename')[len(dirname)+1:]
-                retval[filename][match.group('line_num')].append(match.group('message'))
-        return retval
+                filename = match.group('filename')[len(repo_dir) + 1:]
+                linter_errors[filename][match.group('line_num')].append(
+                    match.group('message')
+                )
+        return linter_errors
