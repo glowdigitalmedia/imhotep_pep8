@@ -1,21 +1,19 @@
-# imhotep-pep8
+# Imhotep PEP8
 
-`imhotep-pep8` is a plugin for
-[`imhotep`](https://github.com/justinabrahms/imhotep), which provides bindings
-to the pep8 linter. For information on how to setup and run imhotep, [see it's
-docs](https://github.com/justinabrahms/imhotep).
+Imhotep PEP8 is a plugin for [Glow's Imhotep fork](https://github.com/glowdigitalmedia/imhotep), which provides bindings to the pep8 linter.
 
 
-## Installation & Usage
+## Installation
 Install the plugin with:
 
 ```
-pip install imhotep-pep8
+pip install -e git+git://github.com/glowdigitalmedia/imhotep_pep8.git@0.1.1#egg=imhotep_pep8
 ```
 
-To use the plugin, you'll have to pass a path to the linter in question to the
-imhotep runtime.
+It also requires the PEP8 linter:
 
 ```
-python imhotep/main.py --linter=imhotep_pep8.plugin:Pep8Linter # other args here
+pip install pep8
 ```
+
+Optionally put ```tox.ini``` PEP8 linter config in the linted repo root if you want to change the defaults.
